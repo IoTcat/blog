@@ -37,3 +37,4 @@
   <meta name="google-site-verification" content="{{ theme.google_verification }}" />
 {%- endif -%}
 
+<script src='//unpkg.com/valine/dist/Valine.min.js'></script>

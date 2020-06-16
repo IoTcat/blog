@@ -6,6 +6,9 @@ tags:
 ## 神奇的事情
 神奇的事情开始发售了
 
+
+![](https://api.yimian.xyz/img)
+
 ```js
 const home = cooo;
 

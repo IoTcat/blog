@@ -8,14 +8,14 @@ subtitle: "呓喵酱の博客 - IoTcat's Blog"
 description: '跻身世外，随欲而安！- We see what we thought.'
 keywords: 'iotcat,yimian,blog'
 author: IoTcat
-language: zh-CN
+language:
 timezone: 'Asia/Shanghai'
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://www.eee.dog
 root: /
-permalink: :lang/:category/:title/
+permalink: :category/:title/
 permalink_defaults:
 pretty_urls:
   trailing_index: false # Set to false to remove trailing 'index.html' from permalinks
@@ -50,7 +50,7 @@ highlight:
   auto_detect: false
   tab_replace: ''
   wrap: true
-  hljs: false
+  hljs: true
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -62,7 +62,7 @@ index_generator:
   order_by: -date
 
 # Category & Tag
-default_category: uncategorized
+default_category: tech
 category_map:
 tag_map:
 
@@ -99,3 +99,25 @@ theme: even
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: ''
+
+# search
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
+
+
+# Links
+links_icon: globe
+links_title: 友情链接
+links_layout: inline
+links:
+  Dew: https://www.cnblogs.com/ppprseter/
+
+
+codeblock:
+  border_radius:
+  copy_button:
+    enable: true
+    show_result: true

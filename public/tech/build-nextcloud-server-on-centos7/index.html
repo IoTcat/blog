@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="">
+  <head><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="description" content="Build Nextcloud Server on Centos 7.5"/><meta name="keywords" content="iotcat,yimian,blog" /><script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+<link rel="alternate" href="/atom.xml" title="EEE.DOG"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=2.11.0" />
+<link rel="canonical" href="https://www.eee.dog/tech/build-nextcloud-server-on-centos7/"/>
+
+<link rel="stylesheet" type="text/css" href="/lib/fancybox/jquery.fancybox.css" /><script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=2.11.0" />
+
+<script id="baidu_push">
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+  window.config = {"leancloud":{"app_id":null,"app_key":null},"toc":true,"fancybox":true,"pjax":"","latex":true};
+</script>
+
+    <title>Build Nextcloud Server on Centos 7.5 - EEE.DOG</title>
+  <meta name="generator" content="Hexo 4.2.1"><link rel="alternate" href="/atom.xml" title="EEE.DOG" type="application/atom+xml">
+</head>
+
+  <body><div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/." class="logo">EEE.DOG</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list"><a href="/">
+        <li class="mobile-menu-item">Home
+          </li>
+      </a><a href="/archives/">
+        <li class="mobile-menu-item">Archives
+          </li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories
+          </li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags
+          </li>
+      </a><a href="https://iotcat.me/" target="_blank" rel="noopener">
+        <li class="mobile-menu-item">About
+          </li>
+      </a></ul>
+</nav>
+<div class="container" id="mobile-panel">
+      <header id="header" class="header"><div class="logo-wrapper">
+  <a href="/." class="logo">EEE.DOG</a>
+</div>
+
+<nav class="site-navbar"><ul id="menu" class="menu"><li class="menu-item">
+          <a class="menu-item-link" href="/">
+            Home
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/archives/">
+            Archives
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/categories/">
+            Categories
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="/tags/">
+            Tags
+            </a>
+        </li>
+      <li class="menu-item">
+          <a class="menu-item-link" href="https://iotcat.me/" target="_blank" rel="noopener">
+            About
+            </a>
+        </li>
+      </ul></nav>
+</header>
+
+      <main id="main" class="main">
+        <div class="content-wrapper">
+          <div id="content" class="content"><article class="post">
+    <header class="post-header">
+      <h1 class="post-title">Build Nextcloud Server on Centos 7.5
+        </h1>
+
+      <div class="post-meta">
+        <span class="post-time">
+          2020-06-16
+        </span><span class="post-category">
+            <a href="/categories/tech/">tech</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="post-toc" id="post-toc">
+    <h2 class="post-toc-title">Contents</h2>
+    <div class="post-toc-content">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Change-linux-core-to-BBR-vision"><span class="toc-text">Change linux core to BBR vision</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install-Nginx-Service"><span class="toc-text">Install Nginx Service</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install-docker"><span class="toc-text">Install docker</span></a></li></ol>
+    </div>
+  </div><div class="post-content"><p>Nextcloud is an open-source software project coded with PHP. It had provided a ideal private cloud-storage solution which was considered to be reliable and stable. This blog aims to present a Nextcloud Building instruction step by step for the purpose of helping freshman and future reviewing. Nextcloud is an open-source software project coded with PHP. It had provided a ideal private cloud-storage solution which was considered to be reliable and stable. This blog aims to present a Nextcloud Building instruction step by step for the purpose of helping freshman and future reviewing. Nextcloud is an open-source software project coded with PHP. It had provided a ideal private cloud-storage solution which was considered to be reliable and stable. This blog aims to present a Nextcloud Building instruction step by step for the purpose of helping freshman and future reviewing.</p>
+<a id="more"></a>
+
+<h2 id="Change-linux-core-to-BBR-vision"><a href="#Change-linux-core-to-BBR-vision" class="headerlink" title="Change linux core to BBR vision"></a>Change linux core to BBR vision</h2><p>If your server is a new one, it is strongly recommended to update it to an upper version supporting bbr mode, which is a senior centos system core provide by google and it could make your server more efficient.</p>
+<p>Firstly download and install bbr core from github.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ wget -N --no-check-certificate https://github.com/teddysun/across/raw/master/bbr.sh &amp;&amp;\<br>$ chmod +x bbr.sh &amp;&amp; \<br>$ bash bbr.sh<br></code></pre></td></tr></table></figure>
+<p>Use the code to check the core version. If it’s large than 4.9.0 it’s OK.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ uname -r<br></code></pre></td></tr></table></figure>
+<p>Expected return:net.ipv4.tcp_available_congestion_control = bbr cubic reno</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ sysctl net.ipv4.tcp_available_congestion_control<br></code></pre></td></tr></table></figure>
+<p>Expected return: net.ipv4.tcp_congestion_control = bbr</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ sysctl net.ipv4.tcp_congestion_control<br></code></pre></td></tr></table></figure>
+<p>Expected return: net.core.default_qdisc = fq</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ sysctl net.core.default_qdisc<br></code></pre></td></tr></table></figure>
+<p>Expected return: xxxxxxxx tcp_bbr</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ lsmod | grep bbr<br></code></pre></td></tr></table></figure>
+
+<h2 id="Install-Nginx-Service"><a href="#Install-Nginx-Service" class="headerlink" title="Install Nginx Service"></a>Install Nginx Service</h2><p>Pull nginx package from nginx orginzation website.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">rpm -Uvh http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm<br></code></pre></td></tr></table></figure>
+<p>Install Nginx.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ yum install -y nginx<br></code></pre></td></tr></table></figure>
+<p>Start nginx service.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ systemctl start nginx.service<br>$ systemctl <span class="hljs-built_in">enable</span> nginx.service<br></code></pre></td></tr></table></figure>
+
+<p>Set preference file of nginx. Click here to get recommended nginx.conf file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ <span class="hljs-built_in">cd</span> /etc/nginx<br>$ vi nginx.conf<br></code></pre></td></tr></table></figure>
+<p>Apply ssl certification. Rename it with your_domain.crt(key) and download it to your server: /etc/nginx/ssl/</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ //Use scp -r (my ssl file route on my windows)/your_domain.crt \root@(your server ip): /etc/nginx/ssl<br>$ //Use scp -r (my ssl file route on my windows)/your_domain.crt root@(your server ip): /etc/nginx/ssl<br>$ //On WINDOWS BASH<br></code></pre></td></tr></table></figure>
+<p>Check and restart nginx service.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ nginx -t<br><br>$ //If the <span class="hljs-built_in">return</span> is successful it is ok, othervise there exists error <span class="hljs-keyword">in</span> your nginx.conf file. <br>$ systemctl restart nginx<br></code></pre></td></tr></table></figure>
+<h2 id="Install-docker"><a href="#Install-docker" class="headerlink" title="Install docker"></a>Install docker</h2><p>Pull and install docker service from official website.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ curl -sSL https://get.docker.com/ | sh<br></code></pre></td></tr></table></figure>
+<p>Start docker service.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ systemctl start docker<br>$ systemctl <span class="hljs-built_in">enable</span> docker.service<br></code></pre></td></tr></table></figure>
+<p>Pull nextcloud and mariadb(simplified mysql database on centos ) images from github.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker pull rootlogin/nextcloud &amp;&amp; docker pull mariadb:10<br></code></pre></td></tr></table></figure>
+<p>Start image mariadb with docker.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker run -d --name nextcloud_db -v /data/mysql:/var/lib/mysql -e \<br>$ MYSQL_ROOT_PASSWORD=YOUR_PASSWD -e MYSQL_DATABASE=nextcloud \<br>$ -e MYSQL_USER=nextcloud -e MYSQL_PASSWORD=YOURPASSWD mariadb:10<br></code></pre></td></tr></table></figure>
+<p>Start image nextcloud with docker.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ docker run -d --name nextcloud --link nextcloud_db:nextcloud_db -p 127.0.0.1:9001:80 -v /data/nextcloud:/data rootlogin/nextcloud<br></code></pre></td></tr></table></figure>
+<p>That is the last step on server. Now let’s start <a href="http://YOUR_DOMAIN/" target="_blank" rel="noopener">http://YOUR_DOMAIN/</a> with your explorer.</p>
+<p>Recommend to substitute the “localhost” to “nextcloud_db”.</p>
+<hr>
+<p>Reference List:<br><a href="https://www.moerats.com/archives/420/" target="_blank" rel="noopener">https://www.moerats.com/archives/420/</a><br><a href="https://my.oschina.net/yule526751/blog/799004" target="_blank" rel="noopener">https://my.oschina.net/yule526751/blog/799004</a><br><a href="https://www.moerats.com/archives/420/" target="_blank" rel="noopener">https://www.moerats.com/archives/420/</a></p>
+
+      </div>
+      <div class="post-copyright">
+    <p class="copyright-item">
+      <span>Author: </span>
+      <a href="https://www.eee.dog">IoTcat</a>
+    </p>
+    <p class="copyright-item">
+      <span>Link: </span>
+      <a href="https://www.eee.dog/tech/build-nextcloud-server-on-centos7/">https://www.eee.dog/tech/build-nextcloud-server-on-centos7/</a>
+    </p>
+    <p class="copyright-item">
+      <span>License: </span><a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>
+    </p>
+  </div>
+      <footer class="post-footer">
+        <div class="post-tags">
+            <a href="/tags/docker/">docker</a>
+            <a href="/tags/php/">php</a>
+            <a href="/tags/nginx/">nginx</a>
+            </div>
+        
+        <nav class="post-nav"><a class="prev" href="/tech/hello-hexo/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">hello hexo</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    </nav></footer>
+    </article></div><div class="comments" id="comments"></div><div id="vcomments"></div>
+<script>
+    new Valine({
+        el: '#vcomments',
+        appId: 'eVzpK7EyT6OafJvXWIRminWT-gzGzoHsz',
+        appKey: '2qjuEBgVE0BscTQnTmoS9roU',
+      // 设置Bilibili表情包地址
+      emojiCDN: '//i0.hdslb.com/bfs/emote/', 
+      // 表情title和图片映射
+      emojiMaps: {
+          "tv_doge": "6ea59c827c414b4a2955fe79e0f6fd3dcd515e24.png",
+          "tv_亲亲": "a8111ad55953ef5e3be3327ef94eb4a39d535d06.png",
+          "tv_偷笑": "bb690d4107620f1c15cff29509db529a73aee261.png",
+          "tv_再见": "180129b8ea851044ce71caf55cc8ce44bd4a4fc8.png",
+          "tv_冷漠": "b9cbc755c2b3ee43be07ca13de84e5b699a3f101.png",
+          "tv_发怒": "34ba3cd204d5b05fec70ce08fa9fa0dd612409ff.png",
+          "tv_发财": "34db290afd2963723c6eb3c4560667db7253a21a.png",
+          "tv_可爱": "9e55fd9b500ac4b96613539f1ce2f9499e314ed9.png",
+          "tv_吐血": "09dd16a7aa59b77baa1155d47484409624470c77.png",
+          "tv_呆": "fe1179ebaa191569b0d31cecafe7a2cd1c951c9d.png",
+          "tv_呕吐": "9f996894a39e282ccf5e66856af49483f81870f3.png",
+          "tv_困": "241ee304e44c0af029adceb294399391e4737ef2.png",
+          "tv_坏笑": "1f0b87f731a671079842116e0991c91c2c88645a.png",
+          "tv_大佬": "093c1e2c490161aca397afc45573c877cdead616.png",
+          "tv_大哭": "23269aeb35f99daee28dda129676f6e9ea87934f.png",
+          "tv_委屈": "d04dba7b5465779e9755d2ab6f0a897b9b33bb77.png",
+          "tv_害羞": "a37683fb5642fa3ddfc7f4e5525fd13e42a2bdb1.png",
+          "tv_尴尬": "7cfa62dafc59798a3d3fb262d421eeeff166cfa4.png",
+          "tv_微笑": "70dc5c7b56f93eb61bddba11e28fb1d18fddcd4c.png",
+          "tv_思考": "90cf159733e558137ed20aa04d09964436f618a1.png",
+          "tv_惊吓": "0d15c7e2ee58e935adc6a7193ee042388adc22af.png",
+          // ... 更多表情
+      } 
+    })
+</script>
+</div>
+      </main>
+
+      <footer id="footer" class="footer"><div class="social-links"><a href="mailto:i@iotcat.me" class="iconfont icon-email" title="email"></a>
+        <a href="https://github.com/iotcat" target="_blank" rel="noopener" class="iconfont icon-github" title="github"></a>
+        <a href="/atom.xml" class="iconfont icon-rss" title="rss"></a>
+    </div><div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - 
+    <a class="theme-link" href="https://github.com/ahonn/hexo-theme-even" target="_blank" rel="noopener">Even</a>
+  </span>
+
+  <span class="copyright-year">&copy;2018 - 2020<span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">IoTcat</span>
+  </span>
+</div>
+</footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div><script type="text/javascript" src="/lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript" src="/js/src/even.js?v=2.11.0"></script>
+</body>
+</html>
